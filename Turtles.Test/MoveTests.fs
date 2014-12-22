@@ -47,6 +47,34 @@ let ``Given any location and heading moving 90 degrees and forward 4 times end u
                |> move 10.0 
     isSamePosition'ish 7 t1 t2
 
+
+[<Property (Verbose=true)>]
+let ``Given any location and heading moving 60 degrees and forward 6 times end up in same location to three digits`` (x_dec: decimal) (y_dec: decimal) (heading_int: int)= 
+    let x = double x_dec
+    let y = double y_dec
+    let y' = max -1e8 (min 1e8 y)
+    let x' = max -1e8 (min 1e8 x)
+    let heading = double (heading_int/10000) 
+    let t: Turtle = heading, (double (x'), double (y'))
+    let t1 = t |> move 0.0 // Just to get the rounding of the move function
+    let t2 = t |> move 10.0 |> turn60
+               |> move 10.0 |> turn60
+               |> move 10.0 |> turn60
+               |> move 10.0 |> turn60
+               |> move 10.0 |> turn60
+               |> move 10.0 
+    isSamePosition'ish 7 t1 t2
+
+[<Property (Verbose=true)>]
+let ``Turning, moving, turning the other way and then moving should leave x or y the same`` (heading: decimal)= 
+    let heading = double heading 
+    let t1: Turtle = 0.0, (0.0,0.0)
+    let t2 = t1 |> turn heading 
+                |> move 10.0
+                |> turn (-2.0*heading)
+                |> move 10.0
+    isSameY'ish 10 t1 t2 || isSameX'ish 10 t1 t2
+
 [<Property>]
 let ``Moving a multiple of 360 should move forward the same`` (n: int) =
     let t0: Turtle = (1.0, (0.0, 0.0)) 
