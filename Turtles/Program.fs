@@ -22,6 +22,8 @@ let turn (a:Angle) (t: Turtle): Turtle =
     let dir' = dir + a
     (dir', pos) 
 
+let turn90 = turn (decimal (Math.PI/2.0))
+
 let round (digits:int)(t:Turtle): Turtle =
     let dir,(x,y) = t 
     let rounder = roundN digits
