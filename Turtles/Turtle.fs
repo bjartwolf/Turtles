@@ -1,12 +1,11 @@
 ﻿module Turtles
-
 open System
 
-type Dir = double 
-type Position = double*double
-type Turtle = Dir * Position
-type Length = double 
-type Angle = double 
+type Dir = double // The direction of the turtle
+type Position = double*double // The x-y position of the turtle
+type Turtle = Dir * Position // A turtle state is its direction and position
+type Length = double // How long the turtle should move
+type Angle = double // How much the turtle should turn
 
 let roundN (nrOfdoubles: int)(value:double) = Math.Round(value, nrOfdoubles)
 let round5 = roundN 5 
@@ -17,9 +16,8 @@ let turn (a:Angle) (t: Turtle): Turtle =
     let dir' = dir + a
     (dir', pos) 
 
-let turn90 = turn (double (Math.PI/2.0))
-
 let turn60 = turn (double (Math.PI/3.0))
+let turn90 = turn (double (Math.PI/2.0))
 
 let round (digits:int)(t:Turtle): Turtle =
     let dir,(x,y) = t 
