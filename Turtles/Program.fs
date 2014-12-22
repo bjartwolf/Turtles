@@ -1,21 +1,15 @@
 ﻿module Turtles
 open System
 
-type Dir = decimal 
-type Position = decimal*decimal
+type Dir = double 
+type Position = double*double
 type Turtle = Dir * Position
-type Length = decimal 
-type Angle = decimal 
+type Length = double 
+type Angle = double 
 
-let roundN (nrOfDecimals: int)(value:decimal) = Math.Round(value, nrOfDecimals)
+let roundN (nrOfdoubles: int)(value:double) = Math.Round(value, nrOfdoubles)
 let round5 = roundN 5 
 let round10 = roundN 10 
-
-let dcos (value: decimal) : decimal =
-   decimal (cos (double value))
-
-let dsin (value: decimal) : decimal =
-   decimal (sin(double value))
 
 let turn (a:Angle) (t: Turtle): Turtle = 
     let dir,pos = t 
@@ -37,15 +31,15 @@ let isSamePosition'ish (digits:int)(t1: Turtle)(t2: Turtle): bool =
 
 let move (l:Length)(t: Turtle) : Turtle = 
     let dir,(x,y) = t 
-    let x' = x + l * dcos dir
-    let y' = y + l * dsin dir
+    let x' = x + l * cos dir
+    let y' = y + l * sin dir
     let pos' = (x',y')
     (dir, pos') 
 
 [<EntryPoint>]
 let main argv = 
-    let t1 : Turtle = (10m, (10m,10m))
-    let t2 = move 10m t1 
+    let t1 : Turtle = (10.0, (10.0,10.0))
+    let t2 = move 10.0 t1 
     printfn "%A" t2 
     Console.ReadLine() |> ignore
     0 // return an integer exit code
