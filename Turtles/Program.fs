@@ -26,20 +26,6 @@ let round (digits:int)(t:Turtle): Turtle =
     let pos' = (rounder x,rounder y)
     (dir, pos') 
 
-let isSameX'ish (digits:int)(t1: Turtle)(t2: Turtle): bool = 
-    let t1' = round digits t1 
-    let t2' = round digits t2 
-    let _, (x1,_) = t1'
-    let _, (x2,_) = t2'
-    x1 = x2 
-
-let isSameY'ish (digits:int)(t1: Turtle)(t2: Turtle): bool = 
-    let t1' = round digits t1 
-    let t2' = round digits t2 
-    let _, (_,y1) = t1'
-    let _, (_,y2) = t2'
-    y1 = y2 
-
 let isSamePosition'ish (digits:int)(t1: Turtle)(t2: Turtle): bool = 
     let t1' = round digits t1 
     let t2' = round digits t2 

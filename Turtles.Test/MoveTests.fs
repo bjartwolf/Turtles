@@ -66,14 +66,28 @@ let ``Given any location and heading moving 60 degrees and forward 6 times end u
     isSamePosition'ish 7 t1 t2
 
 [<Property (Verbose=true)>]
-let ``Turning, moving, turning the other way and then moving should leave x or y the same`` (heading: decimal)= 
+let ``Turning, moving, turning double the other way and then moving should leave y zero`` (heading: decimal)= 
     let heading = double heading 
     let t1: Turtle = 0.0, (0.0,0.0)
     let t2 = t1 |> turn heading 
                 |> move 10.0
                 |> turn (-2.0*heading)
                 |> move 10.0
-    isSameY'ish 10 t1 t2 || isSameX'ish 10 t1 t2
+    let _,(_,y) = t2
+    roundN 5 y = 0.0
+
+[<Property (Verbose=true)>]
+let ``Turning, moving, turning the other way and then moving then turning then moving should leave y zero`` (heading: decimal)= 
+    let heading = double heading 
+    let t1: Turtle = 0.0, (0.0,0.0)
+    let t2 = t1 |> turn heading 
+                |> move 10.0
+                |> turn (-heading)
+                |> move 10.0
+                |> turn (-heading)
+                |> move 10.0
+    let _,(_,y) = t2
+    roundN 10 y = 0.0
 
 [<Property>]
 let ``Moving a multiple of 360 should move forward the same`` (n: int) =
