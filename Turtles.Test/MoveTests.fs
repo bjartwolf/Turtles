@@ -30,14 +30,14 @@ let ``Given any location, heading 0 moving 90 degrees and forward 4 times end up
     isSamePosition'ish 4 t1 t2
 
 [<Property>]
-let ``Given any location and heading moving 90 degrees and forward 4 times end up in same location to three digits`` (x: decimal) (y: decimal) = 
+let ``Given any location and heading moving 90 degrees and forward 4 times end up in same location to five digits`` (x: decimal) (y: decimal) = 
     let t: Turtle = 1m, (x/100m, y/100m)
     let t1 = t |> move 0m // Just to get the rounding of the move function
     let t2 = t |> move 10m |> turn90 
                |> move 10m |> turn90 
                |> move 10m |> turn90 
                |> move 10m 
-    isSamePosition'ish 3 t1 t2
+    isSamePosition'ish 5 t1 t2
 
 [<Property>]
 let ``Moving a multiple of 360 should move forward the same`` (n: int) =
