@@ -7,12 +7,6 @@ open FsCheck.NUnit
 open System 
 open Turtles
 
-[<TestFixture>] 
-type ``Given a LightBulb that has had its state set to true`` ()=
-    [<Test>] member x.
-     ``when I ask whether it is On it answers true.`` ()=
-            true |> should be True
-            
 [<Property>]
 let ``Moving 360n + 180 should move in opposite direction`` (n: int) =
     let t0 = (1m, (0m, 0m))
