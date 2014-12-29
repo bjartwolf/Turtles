@@ -1,5 +1,6 @@
 ﻿open Turtles
 open System 
+open System.Windows
 open Painter 
 
 let step (t: Turtle) : Turtle =
@@ -13,6 +14,7 @@ let rec play (t: Turtle) (turns: int) : Turtle=
                      t
    else play (step t) (turns - 1)
 
+    
 [<EntryPoint>]
 let main argv = 
     let t1 : Turtle = (0.0, (200.0,200.0))
