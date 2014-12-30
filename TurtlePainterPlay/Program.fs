@@ -47,7 +47,6 @@ let main argv =
     RenderLoop.Run(form, fun _ ->
             d2DRenderTarget.BeginDraw()
             let t1 : Turtle = (0.0, (200.0,200.0))
-            let t2 : Turtle = (-12.0, (300.0,300.0))
             let zeroMove = ((0.0f,0.0f),(0.0f,0.0f))
             let printSeq (seq1:seq<Line*Turtle>) = 
                 let printer (lt: Line*Turtle)= 
@@ -55,7 +54,7 @@ let main argv =
                     let ((x1,y1),(x2,y2)) = l
                     d2DRenderTarget.DrawLine(new Vector2(x1,y1),new Vector2(x2,y2), pinkBrush) 
                 Seq.iter printer seq1; 
-            Seq.unfold myTurtle (zeroMove, (step t1)) |> printSeq 
+            Seq.unfold myTurtle (zeroMove, t1) |> printSeq 
             d2DRenderTarget.EndDraw()
             (!swapChain).Present(0, PresentFlags.None)
         )

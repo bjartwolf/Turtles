@@ -46,24 +46,26 @@ let move (l:Length)(t: Turtle) : Turtle =
     let x' = x + l * cos dir
     let y' = y + l * sin dir
     let pos' = (x',y')
-//    let msg : line = (x,y),(x',y') 
-//    painter.Post(Line msg)
     (dir, pos')
 
 type Line = (single*single)*(single*single)
 
-let step (t: Turtle) : Turtle =
+let step (t: Turtle) (degreesToTurn: double) : Turtle =
   t 
-    |> move 1.0 
-    |> turnDeg 1.0
+    |> turnDeg degreesToTurn 
+    |> move (1.0*degreesToTurn)
 
-let myTurtle (_: Line, t: Turtle) = 
+let myTurtle (l: Line, t: Turtle) = 
+   let turnDeg = 360.0/12.0
    let dir, _= t 
    let distFromPi = Math.Abs(dir % (2.0*Math.PI))
-   if  distFromPi < 0.001 || distFromPi > (2.0*Math.PI-0.001) then 
+   let zeroMove = ((0.0f,0.0f),(0.0f,0.0f))
+   let lineIsZero = l = zeroMove 
+//   if  not lineIsZero && (distFromPi < 0.01 || distFromPi > (2.0*Math.PI-0.01)) then 
+   if  not lineIsZero && dir > Math.PI*2.0 then 
         None 
    else
-        let t' = step t   
+        let t' = step t turnDeg  
         let _,(x,y) = t
         let _,(x',y') = t'
         let lastMove = ((single x,single y),(single x',single y'))
