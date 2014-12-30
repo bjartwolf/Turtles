@@ -29,7 +29,7 @@ let main argv =
     let mutable device: SharpDX.Direct3D10.Device1 = null
     let swapChain = ref null 
     SharpDX.Direct3D10.Device1.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.BgraSupport, desc,
-                SharpDX.Direct3D10.FeatureLevel.Level_10_0, &device, swapChain) 
+                SharpDX.Direct3D10.FeatureLevel.Level_10_1, &device, swapChain) 
 
     use d2DFactory = new SharpDX.Direct2D1.Factory()
     use factory = (!swapChain).GetParent<SharpDX.DXGI.Factory>()
@@ -39,22 +39,20 @@ let main argv =
     let surface = backBuffer.QueryInterface<Surface>()
     let d2DRenderTarget = new RenderTarget(d2DFactory, surface, new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)))
     let yellow = SharpDX.Color.Yellow
-    let yellow4 = SharpDX.Color4(float32 yellow.R/255.0f, float32 yellow.G/255.0f, float32 yellow.B/255.0f/255.0f, float32 yellow.A)
-    let pink = SharpDX.Color.HotPink
-    let pink4 = SharpDX.Color4(float32 pink.R/255.0f, float32 pink.G/255.0f, float32 pink.B/255.0f, float32 pink.A/255.0f)
-    let yellowBrush = new SolidColorBrush(d2DRenderTarget, yellow4)
-    let pinkBrush = new SolidColorBrush(d2DRenderTarget, pink4)
+    
+    let pinkBrush = new SolidColorBrush(d2DRenderTarget, SharpDX.Color.HotPink.ToColor4())
     RenderLoop.Run(form, fun _ ->
             d2DRenderTarget.BeginDraw()
-            let t1 : Turtle = (0.0, (200.0,200.0))
+            d2DRenderTarget.Clear(new Nullable<SharpDX.Color4>(SharpDX.Color.Black.ToColor4()))
             let zeroMove = ((0.0f,0.0f),(0.0f,0.0f))
             let printSeq (seq1:seq<Line*Turtle>) = 
                 let printer (lt: Line*Turtle)= 
                     let (l,t) = lt
                     let ((x1,y1),(x2,y2)) = l
-                    d2DRenderTarget.DrawLine(new Vector2(x1,y1),new Vector2(x2,y2), pinkBrush) 
+                    d2DRenderTarget.DrawLine(new Vector2(x1,y1),new Vector2(x2,y2), pinkBrush,0.1f) 
                 Seq.iter printer seq1; 
-            Seq.unfold myTurtle (zeroMove, t1) |> printSeq 
+            for i in 3 .. 360 do
+                Seq.unfold (myTurtle i) (zeroMove, (0.0, (600.0,10.0))) |> printSeq 
             d2DRenderTarget.EndDraw()
             (!swapChain).Present(0, PresentFlags.None)
         )

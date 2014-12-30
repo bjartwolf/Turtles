@@ -53,10 +53,10 @@ type Line = (single*single)*(single*single)
 let step (t: Turtle) (degreesToTurn: double) : Turtle =
   t 
     |> turnDeg degreesToTurn 
-    |> move (1.0*degreesToTurn)
+    |> move (4.0*degreesToTurn)
 
-let myTurtle (l: Line, t: Turtle) = 
-   let turnDeg = 360.0/12.0
+let myTurtle (edges: int) (l: Line, t: Turtle) = 
+   let turnDeg = 360.0/ (float edges)
    let dir, _= t 
    let distFromPi = Math.Abs(dir % (2.0*Math.PI))
    let zeroMove = ((0.0f,0.0f),(0.0f,0.0f))
