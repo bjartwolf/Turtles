@@ -37,15 +37,15 @@ let main argv =
     let surface = backBuffer.QueryInterface<Surface>()
     let d2DRenderTarget = new RenderTarget(d2DFactory, surface, new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)))
     let yellow = SharpDX.Color.Yellow
-    let yellow4 = SharpDX.Color4(float32 yellow.R, float32 yellow.G, float32 yellow.B, float32 yellow.A)
+    let yellow4 = SharpDX.Color4(float32 yellow.R/255.0f, float32 yellow.G/255.0f, float32 yellow.B/255.0f/255.0f, float32 yellow.A)
     let pink = SharpDX.Color.HotPink
-    let pink4 = SharpDX.Color4(float32 pink.R, float32 pink.G, float32 pink.B, float32 pink.A)
+    let pink4 = SharpDX.Color4(float32 pink.R/255.0f, float32 pink.G/255.0f, float32 pink.B/255.0f, float32 pink.A/255.0f)
     let solidColorBrushYellow = new SolidColorBrush(d2DRenderTarget, yellow4)
     let solidColorBrushRed = new SolidColorBrush(d2DRenderTarget, pink4)
     RenderLoop.Run(form, fun _ ->
-            let rect = new SharpDX.RectangleF(float32 10.0,float32 10.0,float32 200.0,float32 200.0)
             d2DRenderTarget.BeginDraw()
-            d2DRenderTarget.FillRectangle(rect, solidColorBrushYellow)
+//            let rect = new SharpDX.RectangleF(float32 x*3.0f,float32 y*3.0f,float32 x*3.0f+1.0f,float32 y*3.0f+1.0f)
+//            d2DRenderTarget.FillRectangle(rect, solidColorBrushRed)
             d2DRenderTarget.EndDraw()
             (!swapChain).Present(0, PresentFlags.None)
         )

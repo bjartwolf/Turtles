@@ -1,8 +1,5 @@
 ﻿module Painter
 
-open System.Drawing
-open System.Windows.Forms
-
 type point = double*double
 type line = point*point
 type PainterMsg = 
@@ -31,9 +28,5 @@ let painter =
                                                   let y1 = float32 y1 
                                                   let x2 = float32 x2 
                                                   let y2 = float32 y2 
-//                                                  graphics.DrawLine(blackPen, x1, y1, x2, y2)
-//                                                  box.Refresh() |> ignore
-//                                                  form.Refresh() |> ignore
-//                                                  form.Update() |> ignore
                                                   return! loop 0}
                 loop 0)

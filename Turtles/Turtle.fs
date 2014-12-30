@@ -1,6 +1,5 @@
 ﻿module Turtles
 open System
-open Painter 
 
 type Dir = double // The direction of the turtle
 type Position = double*double // The x-y position of the turtle
@@ -47,6 +46,6 @@ let move (l:Length)(t: Turtle) : Turtle =
     let x' = x + l * cos dir
     let y' = y + l * sin dir
     let pos' = (x',y')
-    let msg : line = (x,y),(x',y') 
-    painter.Post(Line msg)
+//    let msg : line = (x,y),(x',y') 
+//    painter.Post(Line msg)
     (dir, pos')
