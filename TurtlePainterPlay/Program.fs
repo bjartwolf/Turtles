@@ -5,6 +5,8 @@ open System.Drawing
 open SharpDX.Direct2D1
 open SharpDX.Direct3D10
 open SharpDX.DXGI
+open SharpDX
+open Turtles
 open SharpDX.Windows
 // Learn more about F# at http://fsharp.net
 // See the 'F# Tutorial' project for more help.
@@ -40,12 +42,20 @@ let main argv =
     let yellow4 = SharpDX.Color4(float32 yellow.R/255.0f, float32 yellow.G/255.0f, float32 yellow.B/255.0f/255.0f, float32 yellow.A)
     let pink = SharpDX.Color.HotPink
     let pink4 = SharpDX.Color4(float32 pink.R/255.0f, float32 pink.G/255.0f, float32 pink.B/255.0f, float32 pink.A/255.0f)
-    let solidColorBrushYellow = new SolidColorBrush(d2DRenderTarget, yellow4)
-    let solidColorBrushRed = new SolidColorBrush(d2DRenderTarget, pink4)
+    let yellowBrush = new SolidColorBrush(d2DRenderTarget, yellow4)
+    let pinkBrush = new SolidColorBrush(d2DRenderTarget, pink4)
     RenderLoop.Run(form, fun _ ->
             d2DRenderTarget.BeginDraw()
-//            let rect = new SharpDX.RectangleF(float32 x*3.0f,float32 y*3.0f,float32 x*3.0f+1.0f,float32 y*3.0f+1.0f)
-//            d2DRenderTarget.FillRectangle(rect, solidColorBrushRed)
+            let t1 : Turtle = (0.0, (200.0,200.0))
+            let t2 : Turtle = (-12.0, (300.0,300.0))
+            let zeroMove = ((0.0f,0.0f),(0.0f,0.0f))
+            let printSeq (seq1:seq<Line*Turtle>) = 
+                let printer (lt: Line*Turtle)= 
+                    let (l,t) = lt
+                    let ((x1,y1),(x2,y2)) = l
+                    d2DRenderTarget.DrawLine(new Vector2(x1,y1),new Vector2(x2,y2), pinkBrush) 
+                Seq.iter printer seq1; 
+            Seq.unfold myTurtle (zeroMove, (step t1)) |> printSeq 
             d2DRenderTarget.EndDraw()
             (!swapChain).Present(0, PresentFlags.None)
         )

@@ -49,3 +49,22 @@ let move (l:Length)(t: Turtle) : Turtle =
 //    let msg : line = (x,y),(x',y') 
 //    painter.Post(Line msg)
     (dir, pos')
+
+type Line = (single*single)*(single*single)
+
+let step (t: Turtle) : Turtle =
+  t 
+    |> move 1.0 
+    |> turnDeg 1.0
+
+let myTurtle (_: Line, t: Turtle) = 
+   let dir, _= t 
+   let distFromPi = Math.Abs(dir % (2.0*Math.PI))
+   if  distFromPi < 0.001 || distFromPi > (2.0*Math.PI-0.001) then 
+        None 
+   else
+        let t' = step t   
+        let _,(x,y) = t
+        let _,(x',y') = t'
+        let lastMove = ((single x,single y),(single x',single y'))
+        Some((lastMove,t),(lastMove, t'))
