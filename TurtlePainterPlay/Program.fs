@@ -1,6 +1,4 @@
 ﻿open System
-open System.Windows.Forms
-open System.Collections.Generic
 open System.Drawing
 open SharpDX.Direct2D1
 open SharpDX.Direct3D10
@@ -8,8 +6,6 @@ open SharpDX.DXGI
 open SharpDX
 open Turtles
 open SharpDX.Windows
-// Learn more about F# at http://fsharp.net
-// See the 'F# Tutorial' project for more help.
 
 [<STAThread>]
 [<EntryPoint>]
