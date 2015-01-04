@@ -49,11 +49,64 @@ let move (l:Length)(t: Turtle) : Turtle =
     (dir, pos')
 
 type Line = (single*single)*(single*single)
+type Lines = Line list
 
 let step (t: Turtle) (degreesToTurn: double) : Turtle =
   t 
     |> turnDeg degreesToTurn 
-    |> move (4.0*degreesToTurn)
+    |> move 1.0 
+//    |> move (max (min degreesToTurn 7.0) 10.0)
+
+let myNewPolyTurtle (turnDeg: float) (l: Line, t: Turtle, shouldMoveDoubleAngle: bool) = 
+   let dir, _= t 
+   let distFromPi = Math.Abs(dir % (2.0*Math.PI))
+   let zeroMove = ((0.0f,0.0f),(0.0f,0.0f))
+   let lineIsZero = l = zeroMove 
+   if  not lineIsZero && (not shouldMoveDoubleAngle) && (distFromPi < 0.0001 || distFromPi > (2.0*Math.PI-0.0001)) then 
+//   if  not lineIsZero && dir > Math.PI*2.0 then 
+        None 
+   else
+        let t' = step t (if shouldMoveDoubleAngle then turnDeg*2.0 else turnDeg)  
+        let _,(x,y) = t
+        let _,(x',y') = t'
+        let lastMove = ((single x,single y),(single x',single y'))
+        Some((lastMove,t, shouldMoveDoubleAngle),(lastMove, t', not shouldMoveDoubleAngle))
+
+let myPolyTurtle (turnDeg: float) (l: Line, t: Turtle) = 
+   let dir, _= t 
+   let distFromPi = Math.Abs(dir % (2.0*Math.PI))
+   let zeroMove = ((0.0f,0.0f),(0.0f,0.0f))
+   let lineIsZero = l = zeroMove 
+   if  not lineIsZero && (distFromPi < 0.01 || distFromPi > (2.0*Math.PI-0.01)) then 
+//   if  not lineIsZero && dir > Math.PI*2.0 then 
+        None 
+   else
+        let t' = step t turnDeg  
+        let _,(x,y) = t
+        let _,(x',y') = t'
+        let lastMove = ((single x,single y),(single x',single y'))
+        Some((lastMove,t),(lastMove, t'))
+
+let turtleLine (t:Turtle) (t': Turtle) : Line = let _,(x,y) = t
+                                                let _,(x',y') = t'
+                                                let l: Line = ((single x,single y),(single x',single y'))
+                                                l
+
+// Sort of importont to be tail recursive
+let rec yieldTurtle (edges: int) (t: Turtle): seq<Line option> = 
+   let turnDeg = 360.0/ (float edges)
+   seq {
+        let t' = step t turnDeg  
+        yield Some (turtleLine t t')
+////        let t' = step t (2.0*turnDeg) 
+//        yield Some (turtleLine t t')
+        let dir, _= t'
+        let distFromPi = Math.Abs(dir % (2.0*Math.PI)) in 
+        if (distFromPi < 0.01 || distFromPi > (2.0*Math.PI-0.01)) then 
+            yield None
+        else 
+            yield! (yieldTurtle edges t')
+    }
 
 let myTurtle (edges: int) (l: Line, t: Turtle) = 
    let turnDeg = 360.0/ (float edges)
