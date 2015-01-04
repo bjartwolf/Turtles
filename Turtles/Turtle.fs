@@ -61,7 +61,10 @@ let turtleLine (t:Turtle) (t': Turtle) : Line = let _,(x,y) = t
                                                 let l: Line = ((single x,single y),(single x',single y'))
                                                 l
 
-let distFromPi dir = Math.Abs(dir % (2.0*Math.PI)) 
+let closeToPi dir = 
+    let distFromPi dir = Math.Abs(dir % (2.0*Math.PI)) 
+    let closeToPi = distFromPi dir 
+    closeToPi < 0.00001 || closeToPi > (2.0*Math.PI-0.00001)
 
 let rec yieldTurtle (edges: int) (t: Turtle): seq<Line option> = 
    let turnDeg = 360.0/ (float edges)
@@ -71,7 +74,7 @@ let rec yieldTurtle (edges: int) (t: Turtle): seq<Line option> =
         let t' = step t turnDeg  
         yield Some (turtleLine t t')
         let dir, _= t'
-        if (distFromPi dir < 0.01 || distFromPi dir > (2.0*Math.PI-0.01)) then 
+        if closeToPi dir then 
             yield None
         else 
             yield! (yieldTurtle edges t')
@@ -79,16 +82,16 @@ let rec yieldTurtle (edges: int) (t: Turtle): seq<Line option> =
 
 let rec yieldTurtlePoly (edges: int) (t: Turtle): seq<Line option> = 
    let turnDeg = 360.0/ (float edges)
-   let scale =  1.0 //turnDeg / 360.0
+   let scale = (100.0 / float edges) 
    let step = scaledStep scale
    seq {
         let t' = step t turnDeg  
         yield Some (turtleLine t t')
         let t'' = step t' (2.0*turnDeg)
         yield Some (turtleLine t' t'')
-        let dir, _= t''
-        if (distFromPi dir < 0.01 || distFromPi dir > (2.0*Math.PI-0.01)) then 
+        let dir, _ = t''
+        if closeToPi dir then 
             yield None
         else 
-            yield! (yieldTurtle edges t'')
+            yield! (yieldTurtlePoly edges t'')
     }
