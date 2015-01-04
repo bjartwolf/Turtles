@@ -51,26 +51,44 @@ let move (l:Length)(t: Turtle) : Turtle =
 type Line = (single*single)*(single*single)
 type Lines = Line list
 
-let step (t: Turtle) (degreesToTurn: double) : Turtle =
+let scaledStep (scale: double) (t: Turtle) (degreesToTurn: double)  : Turtle =
   t 
     |> turnDeg degreesToTurn 
-    |> move (0.4 * degreesToTurn)
+    |> move (1.0 * scale)
 
 let turtleLine (t:Turtle) (t': Turtle) : Line = let _,(x,y) = t
                                                 let _,(x',y') = t'
                                                 let l: Line = ((single x,single y),(single x',single y'))
                                                 l
 
-// Sort of importont to be tail recursive
+let distFromPi dir = Math.Abs(dir % (2.0*Math.PI)) 
+
 let rec yieldTurtle (edges: int) (t: Turtle): seq<Line option> = 
    let turnDeg = 360.0/ (float edges)
+   let scale = (100.0 / float edges) 
+   let step = scaledStep scale
    seq {
         let t' = step t turnDeg  
         yield Some (turtleLine t t')
         let dir, _= t'
-        let distFromPi = Math.Abs(dir % (2.0*Math.PI)) in 
-        if (distFromPi < 0.01 || distFromPi > (2.0*Math.PI-0.01)) then 
+        if (distFromPi dir < 0.01 || distFromPi dir > (2.0*Math.PI-0.01)) then 
             yield None
         else 
             yield! (yieldTurtle edges t')
+    }
+
+let rec yieldTurtlePoly (edges: int) (t: Turtle): seq<Line option> = 
+   let turnDeg = 360.0/ (float edges)
+   let scale =  1.0 //turnDeg / 360.0
+   let step = scaledStep scale
+   seq {
+        let t' = step t turnDeg  
+        yield Some (turtleLine t t')
+        let t'' = step t' (2.0*turnDeg)
+        yield Some (turtleLine t' t'')
+        let dir, _= t''
+        if (distFromPi dir < 0.01 || distFromPi dir > (2.0*Math.PI-0.01)) then 
+            yield None
+        else 
+            yield! (yieldTurtle edges t'')
     }

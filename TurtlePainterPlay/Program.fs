@@ -53,6 +53,7 @@ let main argv =
             for x in 0 .. 24 do // 24*15 = 360
                 for y in 1 .. 15 do
                       yieldTurtle (x*15+y) (0.0, (float (x+1) * 50.0,float (y-1) *50.0)) |> printLines
+//                      yieldTurtlePoly (x*15+y) (0.0, (float (x+1) * 50.0,float (y-1) *50.0)) |> printLines
             d2DRenderTarget.EndDraw()
             (!swapChain).Present(0, PresentFlags.None)
         )
