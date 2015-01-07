@@ -6,6 +6,7 @@ open SharpDX.DXGI
 open SharpDX
 open Turtles
 open SharpDX.Windows
+open SharpDX.Direct2D1.Effects
 
 [<STAThread>]
 [<EntryPoint>]
@@ -17,8 +18,7 @@ let main argv =
                 BufferCount = 1,
                 ModeDescription =
                     new ModeDescription(form.ClientSize.Width, form.ClientSize.Height,
-//                        new Rational(60, 1), Format.R8G8B8A8_UNorm),
-                        new Rational(10, 1), Format.R8G8B8A8_UNorm),
+                        new Rational(60, 1), Format.R8G8B8A8_UNorm),
                 IsWindowed = dxtrue,
                 OutputHandle = form.Handle,
                 SampleDescription = new SampleDescription(1, 0),
@@ -39,21 +39,31 @@ let main argv =
     let yellow = SharpDX.Color.Yellow
     
     let pinkBrush = new SolidColorBrush(d2DRenderTarget, SharpDX.Color.HotPink.ToColor4())
+    let j = ref 0.0
+
     RenderLoop.Run(form, fun _ ->
+            let rot = !j
+            j := rot + 0.001
             d2DRenderTarget.BeginDraw()
-            d2DRenderTarget.Clear(new Nullable<SharpDX.Color4>(SharpDX.Color.Black.ToColor4()))
+            let myAngle : float32 = float32 rot 
+            let center = new Vector2(float32 500.0,float32 300.0)
+            let scale = new Vector2(float32 (-rot+1.0),float32 (-rot+1.0))
+            d2DRenderTarget.Transform <- Matrix3x2.Scaling(scale)*Matrix3x2.Translation(-center)*Matrix3x2.Rotation(myAngle)*Matrix3x2.Translation(center)
             let printLines (lines:seq<Line option>) = 
                 let printLine (l: Line) = 
                     let ((x1,y1),(x2,y2)) = l 
-                    d2DRenderTarget.DrawLine(new Vector2(x1,y1),new Vector2(x2,y2), pinkBrush,0.3f) 
+//                    d2DRenderTarget.DrawLine(new Vector2(x1,y1),new Vector2(x2,y2), pinkBrush,0.3f) 
+                    d2DRenderTarget.DrawLine(new Vector2(x1,y1),new Vector2(x2,y2), pinkBrush,0.2f) 
                 for line in lines do
                     match line with 
                         | None -> ()
                         | Some(l) -> printLine l 
-            for x in 0 .. 24 do // 24*15 = 360
-                for y in 1 .. 15 do
-//                      yieldTurtle (x*15+y) (0.0, (float (x+1) * 50.0,float (y-1) *50.0)) |> printLines
-                      yieldTurtlePoly (x*15+y) (0.0, (float (x+1) * 50.0,float (y-1) *50.0)) |> printLines
+            d2DRenderTarget.Clear(new Nullable<SharpDX.Color4>(SharpDX.Color.Black.ToColor4()))
+//            largeSimpleTurtle 271 (0.0, (float 500.0,300.0)) |> printLines
+            for x in 1 ..1.. 24 do // 24*15 = 360
+                for y in 1 ..2.. 15 do
+                      simpleTurtle (x*15+y) (0.0, (float (x+1) * 50.0,float (y-1) *50.0)) |> printLines
+//                      turtlePoly (x*15+y) (0.0, (float (x+1) * 50.0,float (y-1) *50.0)) |> printLines
             d2DRenderTarget.EndDraw()
             (!swapChain).Present(0, PresentFlags.None)
         )

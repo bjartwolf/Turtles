@@ -51,9 +51,8 @@ let move (l:Length)(t: Turtle) : Turtle =
 type Line = (single*single)*(single*single)
 type Lines = Line list
 
-let scaledStep (scale: double) (t: Turtle) (degreesToTurn: double)  : Turtle =
+let scaledStep (scale: double) (t: Turtle) : Turtle =
   t 
-    |> turnDeg degreesToTurn 
     |> move (1.0 * scale)
 
 let turtleLine (t:Turtle) (t': Turtle) : Line = let _,(x,y) = t
@@ -61,37 +60,61 @@ let turtleLine (t:Turtle) (t': Turtle) : Line = let _,(x,y) = t
                                                 let l: Line = ((single x,single y),(single x',single y'))
                                                 l
 
-let closeToPi dir = 
-    let distFromPi dir = Math.Abs(dir % (2.0*Math.PI)) 
+let closeToPi (dir:Dir)  = 
+    let distFromPi dir = Math.Abs(float dir) % (2.0*Math.PI) 
     let closeToPi = distFromPi dir 
-    closeToPi < 0.00001 || closeToPi > (2.0*Math.PI-0.00001)
+    closeToPi < 0.0001 || closeToPi > (2.0*Math.PI-0.0001)
 
-let rec yieldTurtle (edges: int) (t: Turtle): seq<Line option> = 
-   let turnDeg = 360.0/ (float edges)
-   let scale = (100.0 / float edges) 
-   let step = scaledStep scale
+let rec largeSimpleTurtle(turning: int) (t: Turtle): seq<Line option> = 
+   let edges = 360.0 / (float turning)
+   let step = scaledStep (500.0 / float edges) 
+   let degreesToTurn  = float turning 
    seq {
-        let t' = step t turnDeg  
+        let t' = step t |> turnDeg degreesToTurn  
         yield Some (turtleLine t t')
         let dir, _= t'
         if closeToPi dir then 
             yield None
         else 
-            yield! (yieldTurtle edges t')
+            yield! (largeSimpleTurtle turning t')
     }
 
-let rec yieldTurtlePoly (edges: int) (t: Turtle): seq<Line option> = 
-   let turnDeg = 360.0/ (float edges)
-   let scale = (100.0 / float edges) 
-   let step = scaledStep scale
+let rec simpleTurtle2 (turning: int) (t: Turtle): Turtle = 
+   let edges = 360.0 / (float turning)
+   let step = scaledStep (100.0 / float edges) 
+   let degreesToTurn  = float turning 
+   let t' = step t |> turnDeg degreesToTurn  
+   let dir, _= t'
+   if closeToPi dir then 
+       t' 
+   else (simpleTurtle2 turning t')
+
+let rec simpleTurtle (turning: int) (t: Turtle): seq<Line option> = 
+   let edges = 360.0 / (float turning)
+   let step = scaledStep (100.0 / float edges) 
+   let degreesToTurn  = float turning 
    seq {
-        let t' = step t turnDeg  
+        let t' = step t |> turnDeg degreesToTurn  
         yield Some (turtleLine t t')
-        let t'' = step t' (2.0*turnDeg)
+        let dir, _= t'
+        if closeToPi dir then 
+            yield None
+        else 
+            yield! (simpleTurtle turning t')
+    }
+
+let rec turtlePoly (turning: int) (t: Turtle): seq<Line option> = 
+   let edges = 360.0 / (float turning)
+   let step = scaledStep (100.0 / float edges) 
+   let degreesToTurn  = float turning 
+   seq {
+        let t' = step t |> turnDeg degreesToTurn 
+        yield Some (turtleLine t t')
+        let t'' = step t' |> turnDeg (2.0*degreesToTurn)
         yield Some (turtleLine t' t'')
         let dir, _ = t''
         if closeToPi dir then 
             yield None
         else 
-            yield! (yieldTurtlePoly edges t'')
+            yield! (turtlePoly turning t'')
     }
