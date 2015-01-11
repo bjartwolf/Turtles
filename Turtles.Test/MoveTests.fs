@@ -102,5 +102,5 @@ let ``Moving a multiple of 360 should move forward the same`` (n: int) =
 [<Property>]
 let ``A simple turtle should turn around no matter what the turning angle is`` (turning: int) =
     let t0: Turtle = (0.0, (0.0, 0.0)) 
-    let t1 = simpleTurtle2 turning t0 
+    let _, t1 = Seq.last simpleTurtle turning t0 
     isSamePosition'ish 3 t0 t1
