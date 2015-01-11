@@ -65,19 +65,19 @@ let closeToPi (dir:Dir)  =
     let closeToPi = distFromPi dir 
     closeToPi < 0.0001 || closeToPi > (2.0*Math.PI-0.0001)
 
-let rec largeSimpleTurtle(turning: int) (t: Turtle): seq<Line option> = 
-   let edges = 360.0 / (float turning)
-   let step = scaledStep (500.0 / float edges) 
-   let degreesToTurn  = float turning 
-   seq {
-        let t' = step t |> turnDeg degreesToTurn  
-        yield Some (turtleLine t t')
-        let dir, _= t'
-        if closeToPi dir then 
-            yield None
-        else 
-            yield! (largeSimpleTurtle turning t')
-    }
+//let rec largeSimpleTurtle(turning: int) (t: Turtle): seq<Line option> = 
+//   let edges = 360.0 / (float turning)
+//   let step = scaledStep (500.0 / float edges) 
+//   let degreesToTurn  = float turning 
+//   seq {
+//        let t' = step t |> turnDeg degreesToTurn  
+//        yield Some (turtleLine t t')
+//        let dir, _= t'
+//        if closeToPi dir then 
+//            yield None
+//        else 
+//            yield! (largeSimpleTurtle turning t')
+//    }
 
 let rec simpleTurtle (turning: int) (t: Turtle): seq<Line option*Turtle> = 
     let edges = 360.0 / (float turning)
@@ -93,18 +93,18 @@ let rec simpleTurtle (turning: int) (t: Turtle): seq<Line option*Turtle> =
              yield! (simpleTurtle turning t')
     }
 
-let rec turtlePoly (turning: int) (t: Turtle): seq<Line option> = 
+let rec turtlePoly (turning: int) (t: Turtle): seq<Line option*Turtle> = 
    let edges = 360.0 / (float turning)
    let step = scaledStep (100.0 / float edges) 
    let degreesToTurn  = float turning 
    seq {
         let t' = step t |> turnDeg degreesToTurn 
-        yield Some (turtleLine t t')
+        yield (Some (turtleLine t t'), t')
         let t'' = step t' |> turnDeg (2.0*degreesToTurn)
-        yield Some (turtleLine t' t'')
+        yield (Some (turtleLine t' t''), t')
         let dir, _ = t''
         if closeToPi dir then 
-            yield None
+            yield (None, t'')
         else 
             yield! (turtlePoly turning t'')
     }

@@ -49,12 +49,12 @@ let main argv =
             let center = new Vector2(float32 500.0,float32 300.0)
             let scale = new Vector2(float32 (-rot+1.0),float32 (-rot+1.0))
             d2DRenderTarget.Transform <- Matrix3x2.Scaling(scale)*Matrix3x2.Translation(-center)*Matrix3x2.Rotation(myAngle)*Matrix3x2.Translation(center)
-            let printLines (lines:seq<Line option>) = 
+            let printLines (lines:seq<Line option*Turtle>) = 
                 let printLine (l: Line) = 
                     let ((x1,y1),(x2,y2)) = l 
 //                    d2DRenderTarget.DrawLine(new Vector2(x1,y1),new Vector2(x2,y2), pinkBrush,0.3f) 
                     d2DRenderTarget.DrawLine(new Vector2(x1,y1),new Vector2(x2,y2), pinkBrush,0.2f) 
-                for line in lines do
+                for line,_ in lines do
                     match line with 
                         | None -> ()
                         | Some(l) -> printLine l 
