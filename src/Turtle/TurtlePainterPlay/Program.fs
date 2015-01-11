@@ -1,9 +1,9 @@
 ﻿open System
 open System.Drawing
+open SharpDX
 open SharpDX.Direct2D1
 open SharpDX.Direct3D10
 open SharpDX.DXGI
-open SharpDX
 open Turtles
 open SharpDX.Windows
 open SharpDX.Direct2D1.Effects
