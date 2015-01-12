@@ -3,6 +3,7 @@
 
 open Fake
 
+RestorePackages()
 // Directories
 let buildDir  = "./build/"
 let testDir   = "./test/"
@@ -36,12 +37,6 @@ Target "NUnitTest" (fun _ ->
                 DisableShadowCopy = true; 
                 OutputFile = testDir + "TestResults.xml"})
 )
-
-//Target "Deploy" (fun _ ->
-//    !! (buildDir + "/**/*.*") 
-//        -- "*.zip" 
-//        |> Zip buildDir (deployDir + "Calculator." + version + ".zip")
-//)
 
 // Build order
 "Clean"
