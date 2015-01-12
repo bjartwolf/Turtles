@@ -6,4 +6,4 @@ if not exist "packages\FAKE\tools\Fake.exe" (
     ".nuget\nuget.exe" "install" "FAKE" "-OutputDirectory" "tools" "-ExcludeVersion" "-Prerelease"
 )
 
-.\packages\FAKE\tools\Fake.exe build.fsx
+"packages\FAKE\tools\Fake.exe" "build.fsx"
