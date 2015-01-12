@@ -1,5 +1,5 @@
 // include Fake libs
-#r "packages/FAKE/tools/FakeLib.dll"
+#r "tools/FAKE/tools/FakeLib.dll"
 
 open Fake
 
