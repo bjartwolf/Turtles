@@ -54,8 +54,8 @@ Target "Docs" (fun _ ->
 // Build order
 "Clean"
   ==> "BuildApp"
-//  ==> "BuildTest"
-//  ==> "NUnitTest"
+  ==> "BuildTest"
+  ==> "NUnitTest"
   ==> "Docs"
 
 // start build
