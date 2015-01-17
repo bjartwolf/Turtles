@@ -6,9 +6,9 @@ open System
 ## The definition of a Turtle 
 A Turtle has a direction and a position in ℝ²
 *)
-type Dir = double // The direction of the turtle
-type Position = double*double // The x-y position of the turtle
-type Turtle = Dir * Position // A turtle state is its direction and position
+type Dir = double
+type Position = double*double
+type Turtle = Dir * Position
 
 
 (** 
