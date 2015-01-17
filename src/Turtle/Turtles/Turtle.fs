@@ -1,11 +1,26 @@
-﻿module Turtles
+﻿(*** hide ***)
+module Turtles
 open System
 
+(** 
+## The definition of a Turtle 
+A Turtle has a direction and a position in ℝ²
+*)
 type Dir = double // The direction of the turtle
 type Position = double*double // The x-y position of the turtle
 type Turtle = Dir * Position // A turtle state is its direction and position
+
+
+(** 
+## Moving and turning 
+A Turtle can move a certain length in the direction it is facing
+*)
 type Length = double // How long the turtle should move
 // Should make this unit of work?
+(** 
+A Turtle can also turn, in radians or degrees, and already I 
+see from the litterate style that my definitions are pretty silly 
+*)
 type Angle = double // How much the turtle should turn
 type Degrees = double // How much the turtle should turn in degrees
 

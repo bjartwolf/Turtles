@@ -20,6 +20,12 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Turtles", "src\Turtle\Turtl
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Turtles.Test", "src\Test\Turtles.Test\Turtles.Test.fsproj", "{E236D053-01FD-48A8-BED6-4B9EC54EF761}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{087EE13B-1B93-4B23-A639-4C4BA9B6BBD9}"
+	ProjectSection(SolutionItems) = preProject
+		Docs.fsx = Docs.fsx
+		template.html = template.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

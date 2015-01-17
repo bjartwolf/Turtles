@@ -4,6 +4,12 @@
 open Fake
 
 RestorePackages()
+#I "packages/FSharp.Formatting.2.6.0/lib/net40/"
+#r "FSharp.CodeFormat.dll"
+#r "FSharp.Literate.dll"
+open FSharp.Literate
+open System.IO
+
 // Directories
 let buildDir  = "./build/"
 let testDir   = "./test/"
@@ -38,11 +44,20 @@ Target "NUnitTest" (fun _ ->
                 OutputFile = testDir + "TestResults.xml"})
 )
 
+Target "Docs" (fun _ ->
+    let source = "./src/Turtle/Turtles" 
+    let templateSource = "./Docs" 
+    let template = Path.Combine(templateSource, "template.html")
+    let script = Path.Combine(source, "Turtle.fs")
+    Literate.ProcessScriptFile(script, template)
+)
 // Build order
 "Clean"
   ==> "BuildApp"
-  ==> "BuildTest"
-  ==> "NUnitTest"
+//  ==> "BuildTest"
+//  ==> "NUnitTest"
+  ==> "Docs"
 
 // start build
-RunTargetOrDefault "NUnitTest"
+//RunTargetOrDefault "NUnitTest"
+RunTargetOrDefault "Docs"
