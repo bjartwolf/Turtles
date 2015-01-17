@@ -8,3 +8,12 @@ test: off
 artifacts:
   - path: src\Turtle\Turtles\Turtle.html
     name: Docs
+deploy:
+- provider: FTP
+  host: waws-prod-db3-001.ftp.azurewebsites.windows.net
+  protocol: ftps
+  username: fsturtles\bjartnes
+  password:
+    secure: 5nXwvX85duPEDkXRh5dVhg==
+  folder: site/wwwroot
+  artifact: src/Turtle/Turtles/Turtle.html
