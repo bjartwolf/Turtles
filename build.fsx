@@ -4,7 +4,7 @@
 open Fake
 
 RestorePackages()
-#I "packages/FSharp.Formatting.2.6.0/lib/net40/"
+#I "packages/FSharp.Formatting.2.6.1/lib/net40/"
 #r "FSharp.CodeFormat.dll"
 #r "FSharp.Literate.dll"
 open FSharp.Literate
