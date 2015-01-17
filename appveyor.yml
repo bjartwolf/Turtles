@@ -1,4 +1,6 @@
-﻿assembly_info:
+﻿before_build:
+  - nuget restore
+assembly_info:
   patch: false
 build_script:
   build.cmd
