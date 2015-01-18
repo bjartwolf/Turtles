@@ -3,45 +3,48 @@ module Turtles
 open System
 
 (** 
+Before we even introduce turtles, we need angles in radians
+and degrees and a conversion between them.
+*)
+[<Measure>] type Radians 
+[<Measure>] type Degrees 
+let radiansPerDegree = Math.PI/180.0*1.0<Radians/Degrees>
+let convertRad2Deg x = x / radiansPerDegree 
+let convertDeg2Rad x = x * radiansPerDegree 
+
+(** 
 ## The definition of a Turtle 
 A Turtle has a direction and a position in ℝ²
 It does not know about the world around it, which it what
 separates it from a turmite, such as Langton's ant.
+Its internal direction is in radians.
 *)
-type Dir = double
+type Dir = float<Radians> 
 type Position = double*double
 type Turtle = Dir * Position
-
 
 (** 
 ## Moving and turning 
 A Turtle can move a certain length in the direction it is facing
 *)
-type Length = double // How long the turtle should move
-// Should make this unit of work?
-(** 
-A Turtle can also turn, in radians or degrees, and already I 
-see from the litterate style that my definitions are pretty silly 
-*)
-type Angle = double // How much the turtle should turn
-type Degrees = double // How much the turtle should turn in degrees
+type Length = double
 
 let roundN (nrOfdoubles: int) (value:double) = Math.Round(value, nrOfdoubles)
 let round5 = roundN 5 
 let round10 = roundN 10 
 
 // Turns the turtle a (radians) degrees
-let turn (a:Angle) (t: Turtle) : Turtle = 
-    let dir,pos = t 
+let turn (a:float<Radians>) (t: Turtle) : Turtle = 
+    let dir, pos = t 
     let dir' = dir + a
     (dir', pos) 
 
 // Turns the turtle a (radians) degrees
-let turnDeg (a:Degrees) (t: Turtle) : Turtle = 
-    turn (a * double (Math.PI/180.0)) t
+let turnDeg (a:float<Degrees>) (t: Turtle) : Turtle = 
+    turn (convertDeg2Rad a ) t
 
-let turn60 = turn (double (Math.PI/3.0))
-let turn90 = turn (double (Math.PI/2.0))
+let turn60 = turnDeg 60.0<Degrees>
+let turn90 = turnDeg 90.0<Degrees>
 
 // Rounds of the turtle position
 let round (digits:int) (t:Turtle) : Turtle =
@@ -60,8 +63,8 @@ let isSamePosition'ish (digits:int) (t1: Turtle) (t2: Turtle): bool =
 // Move in the current direction
 let move (l:Length)(t: Turtle) : Turtle = 
     let dir,(x,y) = t 
-    let x' = x + l * cos dir
-    let y' = y + l * sin dir
+    let x' = x + l * cos (dir / 1.0<Radians>)
+    let y' = y + l * sin (dir / 1.0<Radians>)
     let pos' = (x',y')
     (dir, pos')
 
@@ -99,7 +102,7 @@ let closeToPi (dir:Dir)  =
 let rec simpleTurtle (turning: int) (t: Turtle): seq<Line option*Turtle> = 
     let edges = 360.0 / (float turning)
     let step = scaledStep (100.0 / float edges) 
-    let degreesToTurn  = float turning 
+    let degreesToTurn  = float turning * 1.0<Degrees>
     seq {
          let t' = step t |> turnDeg degreesToTurn  
          yield (Some (turtleLine t t'), t')
@@ -113,7 +116,7 @@ let rec simpleTurtle (turning: int) (t: Turtle): seq<Line option*Turtle> =
 let rec turtlePoly (turning: int) (t: Turtle): seq<Line option*Turtle> = 
    let edges = 360.0 / (float turning)
    let step = scaledStep (100.0 / float edges) 
-   let degreesToTurn  = float turning 
+   let degreesToTurn  = float turning * 1.0<Degrees>
    seq {
         let t' = step t |> turnDeg degreesToTurn 
         yield (Some (turtleLine t t'), t')

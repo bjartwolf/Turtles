@@ -10,8 +10,8 @@ let printSeq (seq1:seq<Line*Turtle>) =
 [<EntryPoint>]
 let main _ = 
     let zeroMove = ((0.0f,0.0f),(0.0f,0.0f))
-    let t1 : Turtle = (0.0, (200.0,200.0))
-    let t2 : Turtle = (-12.0, (300.0,300.0))
+    let t1 : Turtle = (0.0<Radians>, (200.0,200.0))
+    let t2 : Turtle = (-12.0<Radians>, (300.0,300.0))
 //    Seq.unfold myTurtle (step t2) |> printSeq 
     Console.ReadLine() |> ignore
     0 

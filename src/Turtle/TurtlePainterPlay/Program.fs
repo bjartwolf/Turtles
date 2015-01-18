@@ -62,7 +62,7 @@ let main argv =
 //            largeSimpleTurtle 271 (0.0, (float 500.0,300.0)) |> printLines
             for x in 1 ..1.. 24 do // 24*15 = 360
                 for y in 1 ..2.. 15 do
-                      simpleTurtle (x*15+y) (0.0, (float (x+1) * 50.0,float (y-1) *50.0)) |> printLines
+                      simpleTurtle (x*15+y) (0.0<Radians>, (float (x+1) * 50.0,float (y-1) *50.0)) |> printLines
 //                      turtlePoly (x*15+y) (0.0, (float (x+1) * 50.0,float (y-1) *50.0)) |> printLines
             d2DRenderTarget.EndDraw()
             (!swapChain).Present(0, PresentFlags.None)
