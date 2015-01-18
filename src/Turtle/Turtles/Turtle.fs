@@ -5,6 +5,8 @@ open System
 (** 
 ## The definition of a Turtle 
 A Turtle has a direction and a position in ℝ²
+It does not know about the world around it, which it what
+separates it from a turmite, such as Langton's ant.
 *)
 type Dir = double
 type Position = double*double
