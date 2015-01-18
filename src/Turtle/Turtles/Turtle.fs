@@ -3,7 +3,11 @@ module Turtles
 open System
 
 (** 
-## Angles 
+# Helper functions 
+We introduce some simple helper functions, but please skip to Turtles if you are easiliy bored.
+*)
+
+(** 
 Before we even introduce turtles, we need angles in radians
 and degrees and a conversion between them.
 *)
@@ -14,7 +18,15 @@ let convertRad2Deg x = x / radiansPerDegree
 let convertDeg2Rad x = x * radiansPerDegree 
 
 (** 
-## The definition of a Turtle 
+The turtle is using floats, so we must round of to a certain number of digits
+at times to for example see that we are in approximately the same position as we started.
+*)
+let roundN (nrOfdoubles: int) (value:double) = Math.Round(value, nrOfdoubles)
+let round5 = roundN 5 
+let round10 = roundN 10 
+
+(** 
+# The definition of a Turtle 
 A Turtle has a direction and a position in ℝ²
 It does not know about the world around it, which it what
 separates it from a turmite, such as Langton's ant.
@@ -27,38 +39,43 @@ type Turtle = Dir * Position
 (** 
 ## Moving and turning 
 A Turtle can move a certain length in the direction it is facing
+The result of a move is a new turtle in a new position, with the same direction 
 *)
 type Length = double
+let move (l:Length)(t: Turtle) : Turtle = 
+    let dir,(x,y) = t 
+    let x' = x + l * cos (dir / 1.0<Radians>)
+    let y' = y + l * sin (dir / 1.0<Radians>)
+    let pos' = (x',y')
+    (dir, pos')
 
 (** 
-## Numerical accuracy 
-The turtle is using floats, so we must round of to a certain number of digits
-at times to for example see that we are in approximately the same position as we started.
+Turning is always to the left with positive numbers, to turn right
+use negative numbers. Because mathematics.
 *)
-let roundN (nrOfdoubles: int) (value:double) = Math.Round(value, nrOfdoubles)
-let round5 = roundN 5 
-let round10 = roundN 10 
-
-// Turns the turtle a (radians) degrees
 let turn (a:float<Radians>) (t: Turtle) : Turtle = 
     let dir, pos = t 
     let dir' = dir + a
     (dir', pos) 
 
-// Turns the turtle a (radians) degrees
 let turnDeg (a:float<Degrees>) (t: Turtle) : Turtle = 
     turn (convertDeg2Rad a ) t
 
 let turn60 = turnDeg 60.0<Degrees>
 let turn90 = turnDeg 90.0<Degrees>
 
-// Rounds of the turtle position
+(** 
+It can be useful to compare turtle positions by creating a new turtle in a rounded position
+*)
 let round (digits:int) (t:Turtle) : Turtle =
     let dir,(x,y) = t
     let rounder = roundN digits
     let pos' = (rounder x,rounder y)
     (dir, pos')
 
+(** 
+Comparing two turtles to see if they are in approximately the same position to the accuracy given by digits 
+*)
 let isSamePosition'ish (digits:int) (t1: Turtle) (t2: Turtle): bool =
     let t1' = round digits t1
     let t2' = round digits t2
@@ -66,13 +83,6 @@ let isSamePosition'ish (digits:int) (t1: Turtle) (t2: Turtle): bool =
     let _, (x2,y2) = t2'
     x1 = x2 && y1 = y2
 
-// Move in the current direction
-let move (l:Length)(t: Turtle) : Turtle = 
-    let dir,(x,y) = t 
-    let x' = x + l * cos (dir / 1.0<Radians>)
-    let y' = y + l * sin (dir / 1.0<Radians>)
-    let pos' = (x',y')
-    (dir, pos')
 
 type Line = (single*single)*(single*single)
 type Lines = Line list
