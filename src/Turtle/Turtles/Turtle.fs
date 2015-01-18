@@ -3,6 +3,7 @@ module Turtles
 open System
 
 (** 
+## Angles 
 Before we even introduce turtles, we need angles in radians
 and degrees and a conversion between them.
 *)
@@ -29,6 +30,11 @@ A Turtle can move a certain length in the direction it is facing
 *)
 type Length = double
 
+(** 
+## Numerical accuracy 
+The turtle is using floats, so we must round of to a certain number of digits
+at times to for example see that we are in approximately the same position as we started.
+*)
 let roundN (nrOfdoubles: int) (value:double) = Math.Round(value, nrOfdoubles)
 let round5 = roundN 5 
 let round10 = roundN 10 
