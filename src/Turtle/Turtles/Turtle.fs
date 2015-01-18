@@ -52,6 +52,7 @@ let move (l:Length)(t: Turtle) : Turtle =
 (** 
 Turning is always to the left with positive numbers, to turn right
 use negative numbers. Because mathematics.
+As with move, we return a new Turtle
 *)
 let turn (a:float<Radians>) (t: Turtle) : Turtle = 
     let dir, pos = t 
@@ -84,6 +85,11 @@ let isSamePosition'ish (digits:int) (t1: Turtle) (t2: Turtle): bool =
     x1 = x2 && y1 = y2
 
 
+(** 
+The shortest path between two turtles is a line.
+We use singles for co-ordinates, because they are to be drawn by
+a graphics library that doesn't care for doubles anyway
+*)
 type Line = (single*single)*(single*single)
 type Lines = Line list
 
