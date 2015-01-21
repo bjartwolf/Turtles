@@ -93,30 +93,25 @@ a graphics library that doesn't care for doubles anyway
 type Line = (single*single)*(single*single)
 type Lines = Line list
 
+(** 
+A line is really just the position of two turtles
+*)
 let turtleLine (t:Turtle) (t': Turtle) : Line = let _,(x,y) = t
                                                 let _,(x',y') = t'
                                                 let l: Line = ((single x,single y),(single x',single y'))
                                                 l
 
+(** 
+Returns true if the turtle's direction is close to a multiple of two pi
+*)
 let closeToPi (dir:Dir)  = 
     let distFromPi dir = Math.Abs(float dir) % (2.0*Math.PI) 
     let closeToPi = distFromPi dir 
     closeToPi < 0.0001 || closeToPi > (2.0*Math.PI-0.0001)
 
-//let rec largeSimpleTurtle(turning: int) (t: Turtle): seq<Line option> = 
-//   let edges = 360.0 / (float turning)
-//   let step = scaledStep (500.0 / float edges) 
-//   let degreesToTurn  = float turning 
-//   seq {
-//        let t' = step t |> turnDeg degreesToTurn  
-//        yield Some (turtleLine t t')
-//        let dir, _= t'
-//        if closeToPi dir then 
-//            yield None
-//        else 
-//            yield! (largeSimpleTurtle turning t')
-//    }
-
+(** 
+A Turtle-sequencee is a sequence of turtles and the lines it produces while moving
+*)
 let rec simpleTurtle (turning: int) (t: Turtle): seq<Line option*Turtle> = 
     let edges = 360.0 / (float turning)
     let step = move (100.0 / float edges) 
