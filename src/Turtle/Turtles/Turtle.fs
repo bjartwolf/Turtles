@@ -93,10 +93,6 @@ a graphics library that doesn't care for doubles anyway
 type Line = (single*single)*(single*single)
 type Lines = Line list
 
-let scaledStep (scale: double) (t: Turtle) : Turtle =
-  t 
-    |> move (1.0 * scale)
-
 let turtleLine (t:Turtle) (t': Turtle) : Line = let _,(x,y) = t
                                                 let _,(x',y') = t'
                                                 let l: Line = ((single x,single y),(single x',single y'))
@@ -123,7 +119,7 @@ let closeToPi (dir:Dir)  =
 
 let rec simpleTurtle (turning: int) (t: Turtle): seq<Line option*Turtle> = 
     let edges = 360.0 / (float turning)
-    let step = scaledStep (100.0 / float edges) 
+    let step = move (100.0 / float edges) 
     let degreesToTurn  = float turning * 1.0<Degrees>
     seq {
          let t' = step t |> turnDeg degreesToTurn  
@@ -137,7 +133,7 @@ let rec simpleTurtle (turning: int) (t: Turtle): seq<Line option*Turtle> =
 
 let rec turtlePoly (turning: int) (t: Turtle): seq<Line option*Turtle> = 
    let edges = 360.0 / (float turning)
-   let step = scaledStep (100.0 / float edges) 
+   let step = move (100.0 / float edges) 
    let degreesToTurn  = float turning * 1.0<Degrees>
    seq {
         let t' = step t |> turnDeg degreesToTurn 
