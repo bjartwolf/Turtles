@@ -8,7 +8,7 @@ We introduce some simple helper functions, but please skip to Turtles if you are
 *)
 
 (** 
-Before we even introduce turtles, we need angles in radians
+Before we even introduce the turtles, we need angles in radians
 and degrees and a conversion between them.
 *)
 [<Measure>] type Radians 
