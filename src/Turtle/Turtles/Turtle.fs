@@ -3,7 +3,7 @@ module Turtles
 open System
 
 (** 
-# Helper functions 
+# Helper functions...
 We introduce some simple helper functions, but please skip to Turtles if you are easiliy bored.
 *)
 
