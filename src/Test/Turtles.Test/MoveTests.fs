@@ -5,7 +5,7 @@ open FsCheck
 open FsUnit
 open FsCheck.NUnit
 open System 
-open Turtles
+open My.Turtles
 
 [<Property>]
 let ``Moving 360n + 180 should move in opposite direction`` (n: int) =
@@ -19,7 +19,7 @@ let ``Moving 360n + 180 should move in opposite direction`` (n: int) =
     let t3 = 0.0<Radians>,(-x,-y)
     isSamePosition'ish 10 t1 t3
 
-[<Property (Verbose=true)>]
+[<Property>]
 let ``Given any location, heading 0 moving 90 degrees and forward 4 times end up in same location`` (x_dec: decimal) (y_dec: decimal) = 
     let x = double x_dec
     let y = double y_dec
@@ -65,7 +65,7 @@ let ``Given any location and heading moving 60 degrees and forward 6 times end u
                |> move 10.0 
     isSamePosition'ish 7 t1 t2
 
-[<Property (Verbose=true)>]
+[<Property>]
 let ``Turning, moving, turning double the other way and then moving should leave y zero`` (heading: decimal)= 
     let heading = double heading * 1.0<Radians> 
     let t1: Turtle = 0.0<Radians>, (0.0,0.0)
@@ -76,7 +76,7 @@ let ``Turning, moving, turning double the other way and then moving should leave
     let _,(_,y) = t2
     roundN 5 y = 0.0
 
-[<Property (Verbose=true)>]
+[<Property>]
 let ``Turning, moving, turning the other way and then moving then turning then moving should leave y zero`` (heading: decimal)= 
     let heading = double heading * 1.0<Radians>
     let t1: Turtle = 0.0<Radians>, (0.0,0.0)

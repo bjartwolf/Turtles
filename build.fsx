@@ -15,7 +15,7 @@ let buildDir  = "./build/"
 let testDir   = "./test/"
 
 // Filesets
-let appReferences  = !! "src/Turtle\*.fsproj"
+let appReferences  = !! "src/Turtle/Turtles/**/*.fsproj"
 
 let testReferences = !! "src/Test/**/*.fsproj"
 
@@ -25,8 +25,6 @@ Target "Clean" (fun _ ->
 )
 
 Target "BuildApp" (fun _ ->
-
-    // compile all projects below src/app/
     MSBuildRelease buildDir "Build" appReferences
         |> Log "AppBuild-Output: "
 )
@@ -45,11 +43,19 @@ Target "NUnitTest" (fun _ ->
 )
 
 Target "Docs" (fun _ ->
-    let source = "./src/Turtle/Turtles" 
+    let source = "./src/Turtle/Turtles/" 
     let templateSource = "./Docs" 
-    let template = Path.Combine(templateSource, "template.html")
-    let script = Path.Combine(source, "Turtle.fs")
-    Literate.ProcessScriptFile(script, template)
+//    let template = Path.Combine(templateSource, "template.html")
+    let template = Path.Combine(templateSource, "template-project.html")
+//    let script = Path.Combine(source, "Turtle.fs")
+    let projInfo =
+      [ "page-description", "F# Turtles"
+        "page-author", "Bjørn Einar Bjartnes"
+        "github-link", "https://github.com/bjartwolf/turtles"
+        "project-name", "F# Turtles" ]
+//    Literate.ProcessScriptFile(script, template)
+    Literate.ProcessDirectory(source, template, source + "\\output", replacements = projInfo)
+//    Literate.ProcessDirectory(source, template, "output")
 )
 // Build order
 "Clean"
