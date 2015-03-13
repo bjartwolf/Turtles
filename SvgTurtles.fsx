@@ -57,7 +57,7 @@ let template = """
      inkscape:label="1-default"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,0)">
+     >
     [SVG]
   </g>
 </svg>
@@ -66,15 +66,66 @@ let turtleLineToSvg (l: Line option)  =
     match l with 
         | None -> ""
         | Some l -> let (x1,y1), (x2,y2) = l
-                    let formatter = sprintf @"<line x1=""%.2f"" y1=""%.2f"" x2=""%.2f"" y2=""%.2f"" style=""stroke:rgb(255,0,0);stroke-width:2""/>" 
+                    let formatter = sprintf @"<line x1=""%f"" y1=""%f"" x2=""%f"" y2=""%f"" style=""stroke:rgb(255,0,0);stroke-width:2""/>" 
                     formatter x1 y1 x2 y2
-let x = 10
-let y = 10
-let mutable svg = ""
-for x in 1 ..1.. 24 do // 24*15 = 360
-    for y in 1 ..2.. 15 do
-        let turtle = turtlePoly (x*15+y) (0.0<Radians>, (float (x+1) * 50.0,float (y-1) *50.0))
-        let lines = turtle |> Seq.map (fun (l, _) -> turtleLineToSvg l) |> String.concat ""
-        svg <- lines + svg
+type Multiplier = One | Two 
+
+let nearStartPos (pos: Position) (startPosition: Position) = 
+    let x,y = pos
+    let x5 = round5 x
+    let y5 = round5 y
+    let x', y' = startPosition
+    let x'5 = round5 x'
+    let y'5 = round5 y'
+    x5 = x'5 && y5 = y'5
+     
+let rec turtlePoly (turning: int) (t: Turtle) (startPosition: Position) (multiplier: Multiplier): seq<Line option*Turtle> = 
+   let step = move 100.0
+   let multiplier'  = match multiplier with 
+                        | One -> Two
+                        | Two -> One
+   let degreesToTurn  = float turning * 1.0<Degrees> * (match multiplier with
+                                                            | One -> 1.0
+                                                            | Two -> 2.0)
+   seq {
+        let t' = step t |> turnDeg degreesToTurn 
+        yield (Some (turtleLine t t'), t')
+        let t'' = step t' |> turnDeg (2.0*degreesToTurn)
+        yield (Some (turtleLine t' t''), t')
+        let dir, pos = t''
+        if closeToPi dir && nearStartPos pos startPosition then 
+            yield (None, t'')
+        else 
+            yield! (turtlePoly turning t'' startPosition multiplier')
+    }
+//for x in 1 ..1.. 5 do // 24*15 = 360
+//    for y in 1 ..5.. 15 do
+let sumPositions (p1: Position) (p2: Position) =
+    let x1, y1 = p1
+    let x2, y2 = p2
+    (x1+x2,y1+y2)
+let mutable startPos = (float -200.0, float 80.0)
+let incrementPos = (float 220.0, float 35.0)
+let degrees = 70 
+let mutable svg = "" 
+for i in 1 .. 15 do
+    startPos <- (sumPositions startPos incrementPos)
+    let turtle = turtlePoly degrees (0.0<Radians>, startPos ) startPos One
+    svg <- svg + (turtle |> Seq.map (fun (l, _) -> turtleLineToSvg l) |> String.concat "\r\n")
+startPos <- (float -200.0, float 320.0)
+for i in 1 .. 15 do
+    startPos <- (sumPositions startPos (float 220.0, float 35.0))
+    let turtle = turtlePoly degrees (0.0<Radians>, startPos ) startPos One
+    svg <- svg + (turtle |> Seq.map (fun (l, _) -> turtleLineToSvg l) |> String.concat "\r\n")
+startPos <- (float -200.0, float 560.0)
+for i in 1 .. 15 do
+    startPos <- (sumPositions startPos (float 220.0, float 35.0))
+    let turtle = turtlePoly degrees (0.0<Radians>, startPos ) startPos One
+    svg <- svg + (turtle |> Seq.map (fun (l, _) -> turtleLineToSvg l) |> String.concat "\r\n")
+startPos <- (float -200.0, float -160.0)
+for i in 1 .. 15 do
+    startPos <- (sumPositions startPos (float 220.0, float 35.0))
+    let turtle = turtlePoly degrees (0.0<Radians>, startPos ) startPos One
+    svg <- svg + (turtle |> Seq.map (fun (l, _) -> turtleLineToSvg l) |> String.concat "\r\n")
 let res = template.Replace("[SVG]", svg)
 System.IO.File.WriteAllText("C:\\temp\\turtles.svg", res)

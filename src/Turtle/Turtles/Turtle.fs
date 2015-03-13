@@ -128,7 +128,7 @@ let rec simpleTurtle (turning: int) (t: Turtle): seq<Line option*Turtle> =
 
 let rec turtlePoly (turning: int) (t: Turtle): seq<Line option*Turtle> = 
    let edges = 360.0 / (float turning)
-   let step = move (100.0 / float edges) 
+   let step = move (1000.0 / edges)
    let degreesToTurn  = float turning * 1.0<Degrees>
    seq {
         let t' = step t |> turnDeg degreesToTurn 
